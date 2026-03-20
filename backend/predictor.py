@@ -182,7 +182,7 @@ import re
 
 def is_price_token(token):
     """Check if token is currency unit"""
-    return token.lower() in {'triệu', 'k', 'đồng', 'vnd', 'tr', 'đ', 'ngàn', 'tỷ', 'tỉ', 'vn'}
+    return token.lower() in {'triệu', 'k', 'đồng', 'vnd', 'vnđ', 'tr', 'đ', 'ngàn', 'nghìn', 'tỷ', 'tỉ', 'vn', 'tỏi', 'củ', 'cành', 'lít'}
 
 def is_numeric_token(token):
     """Check if token contains numbers"""
@@ -300,7 +300,7 @@ def extract_entities(tokens, labels, original_text, confidences=None):
                 ent['text'] = shorthand_conversions[token_idx]
     
     # PRICE validation & cleanup
-    valid_units = {'triệu', 'k', 'đồng', 'vnd', 'tr', 'đ', 'ngàn', 'tỷ', 'tỉ', 'vn'}
+    valid_units = {'triệu', 'k', 'đồng', 'vnd', 'vnđ', 'tr', 'đ', 'ngàn', 'nghìn', 'tỷ', 'tỉ', 'vn', 'tỏi', 'củ', 'cành', 'lít'}
     filtered_entities = []
     used_indices = set()
     
@@ -344,6 +344,20 @@ def extract_entities(tokens, labels, original_text, confidences=None):
         
         curr_token = tokens[i]
         next_token = tokens[i + 1]
+        # Detect three-token patterns like: <number> <unit> <number>
+        # e.g. "10 tỏi 5", "10 củ 4" -> treat as single PRICE entity
+        if (i + 2) < len(tokens) and i not in used_indices and (i + 1) not in used_indices and (i + 2) not in used_indices:
+            third_token = tokens[i + 2]
+            if is_numeric_token(curr_token) and is_price_token(next_token) and is_numeric_token(third_token):
+                if '_' not in next_token or next_token.lower() in valid_units:
+                    filtered_entities.append({
+                        "text": f"{curr_token} {next_token} {third_token}",
+                        "label": "PRICE",
+                        "tokens": [curr_token, next_token, third_token],
+                        "token_indices": [i, i+1, i+2]
+                    })
+                    used_indices.update([i, i+1, i+2])
+                    continue
         
         if is_numeric_token(curr_token) and is_price_token(next_token):
             if '_' not in next_token or next_token.lower() in valid_units:
@@ -370,11 +384,16 @@ def extract_entities(tokens, labels, original_text, confidences=None):
         if i in used_indices:
             continue
         
-        match_single = re.match(r'^(\d+[.,]?\d*)\s*([kmđ]|triệu|tr)$', token, re.IGNORECASE)
+        match_single = re.match(r'^(\d+[.,]?\d*)\s*([kmđ]|triệu|tr|ngàn|vnđ|củ|cành|lít|nghìn|vnd)$', token, re.IGNORECASE)
         if match_single:
             num, unit = match_single.groups()
-            if unit.lower() in {'k', 'm', 'đ', 'triệu', 'tr'}:
-                unit_display = {'k': 'k', 'm': 'triệu', 'đ': 'đồng', 'triệu': 'triệu', 'tr': 'triệu'}.get(unit.lower(), unit)
+            if unit.lower() in {'k', 'm', 'đ', 'triệu', 'tr', 'ngàn', 'nghìn', 
+                                'vnd', 'vnđ', 'đồng', 'tỷ', 'tỉ', 'củ', 'tỏi', 'lít'}:
+                unit_display = {'k': 'k', 'ngàn': 'ngàn', 'nghìn': 'nghìn',
+                                'm': 'm', 'triệu': 'triệu', 'tr': 'tr', 'củ': 'củ',
+                                'đ': 'đ', 'đồng': 'đồng', 'vnd': 'vnd', 'vnđ': 'vnđ',
+                                'tỷ': 'tỷ', 'tỉ': 'tỉ', 'tỏi': 'tỏi',
+                                'lít': 'lít'}.get(unit.lower(), unit)
                 filtered_entities.append({
                     "text": f"{num} {unit_display}",
                     "label": "PRICE",
