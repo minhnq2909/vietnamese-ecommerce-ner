@@ -1,0 +1,83 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.coverage
+.pytest_cache/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+
+# Docker
+.DS_Store
+*.log
+
+# Project specific
+backend/models/
+backend/vncorenlp/
+backend/vncorenlp/src/
+backend/vncorenlp/target/
+backend/vncorenlp/pom.xml
+backend/vncorenlp/dependency-reduced-pom.xml
+backend/vncorenlp/Readme.md
+backend/vncorenlp/TagsetDescription.md
+backend/vncorenlp/*.md
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# AI Model files - see README.md for setup instructions
+backend/artifacts/
+
+# VnCoreNLP - only track JAR file, ignore all models and embeddings
+backend/vncorenlp/*
+!backend/vncorenlp/VnCoreNLP-1.1.1.jar
