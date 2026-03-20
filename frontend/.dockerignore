@@ -1,0 +1,24 @@
+# Version control
+.git
+.gitignore
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node (if exists)
+node_modules/
+npm-debug.log
+
+# Other
+README.md
+Dockerfile
+.dockerignore
+
+# Build artifacts (if any)
+dist/
+build/

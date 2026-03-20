@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: ner-backend
+    ports:
+      - "${BACKEND_PORT:-5001}:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+    volumes:
+      # Code mount for hot reload
+      - ./backend:/app
+      # Persist model cache
+      - ner-model-cache:/root/.cache
+    restart: unless-stopped
+    networks:
+      - ner-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Web Server
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ner-frontend
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - ner-network
+    volumes:
+      - ./frontend/index.html:/usr/share/nginx/html/index.html
+      - ./frontend/assets:/usr/share/nginx/html/assets
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+networks:
+  ner-network:
+    driver: bridge
+
+volumes:
+  ner-model-cache:
+    driver: local
+
+# Environment variables defaults
+# BACKEND_PORT: Port for backend API (default: 5000)
+# FRONTEND_PORT: Port for frontend (default: 80)
+#
+# Usage:
+#   docker-compose up              # Run with defaults
+#   BACKEND_PORT=5001 docker-compose up  # Custom port
+#   docker-compose down            # Stop and remove containers
+#   docker-compose logs -f backend # View backend logs
