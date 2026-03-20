@@ -19,7 +19,39 @@ git clone https://github.com/minhnq2909/vietnamese-ecommerce-ner.git
 cd vietnamese-ecommerce-ner
 ```
 
-### 2. Download Required Models & Dependencies
+### 2. Install Python Dependencies
+
+The project uses a unified `requirements.txt` in the root directory that covers all components:
+- Backend API (Flask)
+- Training scripts (PyTorch, Transformers)
+- Jupyter notebooks
+- All source code dependencies
+
+**Option A: Using Docker (Recommended)**
+Dependencies are automatically installed when building Docker images:
+
+```bash
+docker-compose build
+```
+
+**Option B: Local Installation**
+Create and activate a Python 3.10+ virtual environment, then install:
+
+```bash
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies from root requirements.txt
+pip install -r requirements.txt
+```
+
+After installation, you can run:
+- Backend: `python backend/app.py`
+- Training: `python src/train_lstm.py` or `python src/train_phobert.py`
+- Notebooks: `jupyter notebook notebooks/`
+
+### 3. Download Required Models & Dependencies
 
 **VnCoreNLP** (for Vietnamese word segmentation):
 
@@ -61,7 +93,7 @@ backend/
         └── idx2tag.pkl        # Index to tag mapping
 ```
 
-### 3. Build and Start Services
+### 4. Build and Start Services
 
 ```bash
 cd ../..  # Back to project root
@@ -74,7 +106,7 @@ docker-compose up -d
 docker-compose ps
 ```
 
-### 4. Access Application
+### 5. Access Application
 
 - **Web UI**: http://localhost:8080
 - **API**: http://localhost:5000

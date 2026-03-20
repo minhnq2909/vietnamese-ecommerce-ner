@@ -4,8 +4,8 @@ services:
   # Backend API
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: ner-backend
     ports:
       - "${BACKEND_PORT:-5001}:5000"

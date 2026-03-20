@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements
+# Copy unified requirements from root
 COPY requirements.txt .
 
 # Create wheels for faster installation
@@ -39,16 +39,15 @@ COPY --from=builder /tmp/requirements.txt .
 RUN pip install --upgrade pip && \
     pip install --no-cache /wheels/*
 
-# Copy application code
-COPY ./requirements.txt .
-COPY ./app.py .
-COPY ./predictor.py .
+# Copy application code from backend directory
+COPY backend/app.py .
+COPY backend/predictor.py .
 
 # Copy artifacts folder
-COPY ./artifacts ./artifacts
+COPY backend/artifacts ./artifacts
 
-# Copy VnCoreNLP (nếu có)
-COPY ./vncorenlp ./vncorenlp
+# Copy VnCoreNLP
+COPY backend/vncorenlp ./vncorenlp
 
 # Expose port
 EXPOSE 5000
