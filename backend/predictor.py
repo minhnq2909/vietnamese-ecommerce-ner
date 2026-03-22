@@ -12,12 +12,12 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification
 def load_artifacts():
     """Load BiLSTM word and label mappings"""
     base_dir = Path(__file__).parent.absolute()
-    word2idx_path = base_dir / "artifacts" / "word2idx.pkl"
+    word2idx_path = base_dir / "artifacts" / "bilstm" / "word2idx.pkl"
     if not word2idx_path.exists():
         raise FileNotFoundError(f"Missing {word2idx_path}")
     with open(word2idx_path, "rb") as f:
         word2idx = pickle.load(f)
-    idx2tag_path = base_dir / "artifacts" / "idx2tag.pkl"
+    idx2tag_path = base_dir / "artifacts" / "bilstm" / "idx2tag.pkl"
     if not idx2tag_path.exists():
         raise FileNotFoundError(f"Missing {idx2tag_path}")
     with open(idx2tag_path, "rb") as f:

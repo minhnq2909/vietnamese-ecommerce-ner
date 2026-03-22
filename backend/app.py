@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 base_dir = Path(__file__).parent.absolute()
-bilstm_model_path = base_dir / "artifacts" / "bilstm_crf.pt"
+bilstm_model_path = base_dir / "artifacts" / "bilstm" / "bilstm_crf.pt"
 phobert_model_dir = base_dir / "artifacts" / "phobert"
 
 # ============ Model Loading ============
