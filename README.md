@@ -73,7 +73,7 @@ wget -P models/wordsegmenter https://raw.githubusercontent.com/vncorenlp/VnCoreN
 cd ..
 ```
 
-**AI Models** (download from Google Drive):
+**AI Models** (download from Google Drive): [NER_Prod](https://drive.google.com/drive/folders/1A-5ea0d-VYtI-ZreP2BAcPReFXqzXXf9?usp=sharing)
 
 Download files from the project's Google Drive link and add to `backend/artifacts/`:
 
