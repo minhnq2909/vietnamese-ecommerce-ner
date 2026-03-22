@@ -22,6 +22,7 @@ cd vietnamese-ecommerce-ner
 ### 2. Install Python Dependencies
 
 The project uses a unified `requirements.txt` in the root directory that covers all components:
+
 - Backend API (Flask)
 - Training scripts (PyTorch, Transformers)
 - Jupyter notebooks
@@ -47,6 +48,7 @@ pip install -r requirements.txt
 ```
 
 After installation, you can run:
+
 - Backend: `python backend/app.py`
 - Training: `python src/train_lstm.py` or `python src/train_phobert.py`
 - Notebooks: `jupyter notebook notebooks/`
@@ -74,7 +76,16 @@ cd ..
 
 **AI Models** (download from Google Drive):
 
-Download files from the project's Google Drive link and add to `backend/artifacts/`:
+1. **Access the Google Drive folder**:
+   - Open https://drive.google.com/drive/folders/1izc-BFRhn2Z7ZTaKRUDa5z1KlgeiNiJO
+   - You'll see 2 folders: `bilstm/` and `phobert/`
+
+2. **Download the files**
+   - Download the `bilstm/` folder from Drive
+   - Download the `phobert/` folder from Drive
+   - Extract to `backend/artifacts/`
+
+3. **Verify the structure** in `backend/artifacts/`:
 
 ```bash
 # Structure of AI model:
@@ -147,7 +158,7 @@ docker-compose down -v
 | Issue                     | Solution                                            |
 | ------------------------- | --------------------------------------------------- |
 | Port already in use       | `docker-compose down -v` then `up -d` again         |
-| Models not loading        | `docker-compose build backend`           |
+| Models not loading        | `docker-compose build backend`                      |
 | Network error on frontend | Rebuild: `docker-compose down -v && up -d`          |
 | Changes not applied       | Use `--no-cache`: `docker-compose build --no-cache` |
 
